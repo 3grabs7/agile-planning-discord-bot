@@ -1,9 +1,11 @@
-﻿using DSharpPlus;
+﻿using DiscordBot.Commands;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,15 +35,24 @@ namespace DiscordBot
                 StringPrefixes = new string[] { Environment.GetEnvironmentVariable("PREFIX") },
                 // Enables users to "@" bot instead of using the assigned prefix
                 EnableMentionPrefix = true,
+                CaseSensitive = false,
+                DmHelp = true,
+                EnableDefaultHelp = true,
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
+
+            // Add command groups here
+            // Automate this when your not in a bad mood
+            Commands.RegisterCommands<Stress>();
 
             await Client.ConnectAsync();
 
             // Lock method in infinite loop to prevent main from returning and closing
             await Task.Delay(-1);
         }
+
+
 
         private async Task<Task> OnClientReady(DiscordClient client, ReadyEventArgs e)
         {
