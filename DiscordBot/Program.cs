@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DiscordBot
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var bot = new Bot();
+            bot.RunAsync().GetAwaiter().GetResult();
+            Console.WriteLine("bye bye baby");
         }
+
     }
 }
