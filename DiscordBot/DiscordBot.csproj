@@ -15,8 +15,4 @@
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.1.0-nightly-00862" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
 </Project>
