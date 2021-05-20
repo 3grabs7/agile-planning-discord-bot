@@ -3,8 +3,7 @@
     "DiscordBot": {
       "commandName": "Project",
       "environmentVariables": {
-        "BOT_TOKEN": "ODQ0ODQ3MTYwMTgzODgxNzUw.YKYXOw.8yi5F2urXErxpH39TQ0zbSA-Ias",
-        "PREFIX": "!"
+        "": "Value"
       }
     }
   }
