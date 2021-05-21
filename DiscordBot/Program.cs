@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading.Tasks;
+using DataAccessLayer;
 
 namespace DiscordBot
 {
@@ -7,10 +11,20 @@ namespace DiscordBot
     {
         public static void Main(string[] args)
         {
-            var bot = new Bot();
-            bot.RunAsync().GetAwaiter().GetResult();
-            Console.WriteLine("bye bye baby");
+            IHost host = CreateHostBuilder(args).Build();
+            using (IServiceScope scope = host.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<AgilePlanningDiscordBotDbContext>();
+                context.Database.EnsureCreated();
+            }
+            host.Run();
         }
 
+        public static IHostBuilder CreateHostBuilder(string[] args)
+            => Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

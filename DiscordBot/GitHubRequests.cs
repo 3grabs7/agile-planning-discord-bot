@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace DiscordBot
 {
-    class GitHubRequests
+    public static class GitHubRequests
     {
+
     }
 }

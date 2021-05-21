@@ -24,7 +24,7 @@ namespace DiscordBot.Commands
         {
             await context.Channel.SendMessageAsync($"Don't worry child, you're {context.Member.DisplayName}, " +
                 $"right now your in {context.Channel.Name}. " +
-                $"In {context.Guild.Owner.DisplayName} safe hands.")
+                $"In {context.Client.CurrentApplication.Name}s safe hands.")
                 .ConfigureAwait(false);
         }
     }

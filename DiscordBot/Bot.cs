@@ -16,7 +16,7 @@ namespace DiscordBot
         public DiscordClient Client { get; private set; }
         public CommandsNextExtension Commands { get; private set; }
 
-        public async Task RunAsync()
+        public Bot(IServiceProvider services)
         {
             var config = new DiscordConfiguration
             {
@@ -38,6 +38,7 @@ namespace DiscordBot
                 CaseSensitive = false,
                 DmHelp = true,
                 EnableDefaultHelp = true,
+                Services = services
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
@@ -46,13 +47,9 @@ namespace DiscordBot
             // Automate this when your not in a bad mood
             Commands.RegisterCommands<Stress>();
 
-            await Client.ConnectAsync();
+            Client.ConnectAsync();
 
-            // Lock method in infinite loop to prevent main from returning and closing
-            await Task.Delay(-1);
         }
-
-
 
         private async Task<Task> OnClientReady(DiscordClient client, ReadyEventArgs e)
         {
