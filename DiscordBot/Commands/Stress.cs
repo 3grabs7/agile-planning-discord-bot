@@ -1,9 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using DSharpPlus.Interactivity.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
@@ -26,6 +25,23 @@ namespace DiscordBot.Commands
                 $"right now your in {context.Channel.Name}. " +
                 $"In {context.Client.CurrentApplication.Name}s safe hands.")
                 .ConfigureAwait(false);
+        }
+
+        [Command("Riddle")]
+        public async Task Riddle(CommandContext context, string riddle, string answer)
+        {
+            var interactivity = context.Client.GetInteractivity();
+
+            await context.Channel.SendMessageAsync(
+                $"Hey! {context.Message.Author.Username} got a riddle for you. '{riddle}'"
+                );
+
+            var msg = await interactivity.WaitForMessageAsync(
+                x => x.Content.Equals(answer, StringComparison.InvariantCultureIgnoreCase)
+                ).ConfigureAwait(false);
+            await context.Channel.SendMessageAsync(
+                $"Nice '{msg.Result.Author.Username}'! '{msg.Result.Content}' was correct. You smart osv..."
+                );
         }
     }
 }

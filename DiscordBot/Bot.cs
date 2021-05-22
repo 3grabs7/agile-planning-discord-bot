@@ -2,11 +2,11 @@
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
+using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DiscordBot
@@ -15,6 +15,7 @@ namespace DiscordBot
     {
         public DiscordClient Client { get; private set; }
         public CommandsNextExtension Commands { get; private set; }
+        public InteractivityExtension Interactivity { get; private set; }
 
         public Bot(IServiceProvider services)
         {
@@ -29,6 +30,11 @@ namespace DiscordBot
             Client = new DiscordClient(config);
 
             Client.Ready += OnClientReady;
+
+            Client.UseInteractivity(new InteractivityConfiguration
+            {
+
+            });
 
             var commandsConfig = new CommandsNextConfiguration
             {
@@ -46,6 +52,9 @@ namespace DiscordBot
             // Add command groups here
             // Automate this when your not in a bad mood
             Commands.RegisterCommands<Stress>();
+            // Commands.RegisterCommands<Polls>();
+            Commands.RegisterCommands<ConnectToGitHub>();
+            Commands.RegisterCommands<RoleManager>();
 
             Client.ConnectAsync();
 

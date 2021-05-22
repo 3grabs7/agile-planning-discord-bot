@@ -8,6 +8,7 @@ namespace DataAccessLayer.Models
 {
     public class GitHubIdentity : Entity
     {
+        public string GuildId { get; set; }
         public int ClientId { get; set; }
         public string State { get; set; }
         public string Login { get; set; }
