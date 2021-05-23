@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DiscordBot.Attributes;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
 {
+    [RequireCategories(CategoryCheckMode.Any, "bot-channels")]
     public class Stress : BaseCommandModule
     {
         [Command("Hi")]

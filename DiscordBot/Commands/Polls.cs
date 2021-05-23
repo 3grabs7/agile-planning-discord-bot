@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DiscordBot.Attributes;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Enums;
@@ -12,6 +13,7 @@ namespace DiscordBot.Commands
 {
     public class Polls : BaseCommandModule
     {
+        [RequireChannels(ChannelCheckMode.Allow, "standup🍟")]
         [Command("StandUp")]
         public async Task StandUp(CommandContext context, string time, params DiscordEmoji[] options)
         {
