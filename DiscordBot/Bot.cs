@@ -52,7 +52,7 @@ namespace DiscordBot
             // Add command groups here
             // Automate this when your not in a bad mood
             Commands.RegisterCommands<Stress>();
-            // Commands.RegisterCommands<Polls>();
+            Commands.RegisterCommands<Polls>();
             Commands.RegisterCommands<ConnectToGitHub>();
             Commands.RegisterCommands<RoleManager>();
 
