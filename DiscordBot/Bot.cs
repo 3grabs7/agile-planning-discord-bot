@@ -43,6 +43,7 @@ namespace DiscordBot
                 EnableMentionPrefix = true,
                 CaseSensitive = false,
                 DmHelp = true,
+                EnableDms = true,
                 EnableDefaultHelp = true,
                 Services = services
             };

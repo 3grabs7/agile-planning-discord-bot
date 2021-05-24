@@ -14,7 +14,9 @@ namespace DiscordBot
             using (IServiceScope scope = host.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<AgilePlanningDiscordBotDbContext>();
-                context.Database.EnsureDeleted();
+                // Comment out if database models get updated
+                // WARNING! Everything will be lost. Stop crying and do your migrations!
+                // context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
             }
             host.Run();

@@ -1,6 +1,8 @@
 ﻿using DataAccessLayer;
 using DataAccessLayer.Models;
 using DiscordBot.Attributes;
+using DiscordBot.Handlers.ReportLogger;
+using DiscordBot.Handlers.ReportLogger.Steps;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -22,6 +24,40 @@ namespace DiscordBot.Commands
             _dbContext = dbContext;
         }
 
+        [Command("ReportInit")]
+        public async Task InitializeReportLogger(CommandContext context)
+        {
+            var newReport = new Report()
+            {
+                UserId = context.Message.Author.Id.ToString(),
+                Date = DateTime.Now.ToString("dddd, dd MMMM HH:mm")
+            };
+
+            var summaryStep = new SummaryStep("Enter summary", null);
+            var timeboxStep = new TimeboxStep("Enter timebox", summaryStep);
+            var meetingTypeStep = new MeetingTypeStep("Enter meeting type", timeboxStep);
+
+            meetingTypeStep.OnValidResult += (result) => newReport.MeetingType = result;
+            summaryStep.OnValidResult += (result) => newReport.Summary = result;
+            timeboxStep.OnValidResult += (result) => newReport.Timebox = result;
+
+            // open dm
+            // var dm = await context.Member.CreateDmChannelAsync().ConfigureAwait(false);
+
+            var reportLogger = new ReportLoggerHandler(
+                context.Client,
+                context.Channel,
+                context.User,
+                meetingTypeStep
+                );
+
+            var succeeded = await reportLogger.ProcessReportLogger().ConfigureAwait(false);
+            if (!succeeded) return;
+
+            await _dbContext.AddAsync(newReport);
+            await _dbContext.SaveChangesAsync();
+        }
+
         [Command("ReportTemplate")]
         public async Task ReportTemplate(CommandContext context, string type, string timebox, string summary)
         {
@@ -36,8 +72,6 @@ namespace DiscordBot.Commands
             await context.Channel.SendMessageAsync(reportMessage).ConfigureAwait(false);
             await context.Message.DeleteAsync().ConfigureAwait(false);
 
-            var interactivity = context.Client.GetInteractivity();
-
             var reportEntity = new Report
             {
                 UserId = context.Message.Author.Id.ToString(),
@@ -49,7 +83,6 @@ namespace DiscordBot.Commands
 
             await _dbContext.AddAsync(reportEntity);
             await _dbContext.SaveChangesAsync();
-
         }
 
         [Command("GetAllReports")]
@@ -77,45 +110,78 @@ namespace DiscordBot.Commands
 
         }
 
-        [Command("GoToReports")]
-        [Description("Get all reports")]
-        public async Task GoToReports(CommandContext context)
-        {
-            var reports = _dbContext.Reports
-                .AsNoTracking()
-                .Where(r => r.UserId == context.Message.Author.Id.ToString());
-
-            var reportMessage = new DiscordEmbedBuilder()
-            {
-                Title = $"Links to all reports",
-                Description = $"{reports.Count()} reports found"
-            };
-
-            var channelMessages = await context.Channel.GetMessagesAsync(9999);
-
-            foreach (var report in channelMessages)
-            {
-                if (report.Author != context.Message.Author)
-                {
-                    reportMessage.AddField($"Link : ", report.JumpLink.AbsoluteUri);
-                }
-            }
-            await context.Channel.SendMessageAsync(reportMessage).ConfigureAwait(false);
-            await context.Message.DeleteAsync().ConfigureAwait(false);
-
-        }
-
         [Command("GetReportsByType")]
         [Description("Get report of specific type")]
         public async Task GetReportsByType(CommandContext context, string type)
         {
+            var reports = _dbContext.Reports
+                .AsNoTracking()
+                .Where(r => r.UserId == context.Message.Author.Id.ToString() &&
+                    r.MeetingType == type);
 
+            foreach (var report in reports)
+            {
+                var reportMessage = new DiscordEmbedBuilder()
+                {
+                    Title = $"Report for {report.MeetingType}"
+                };
+                reportMessage.AddField("Summary", report.Summary);
+                reportMessage.AddField("Timebox", report.Timebox);
+                reportMessage.WithFooter($"Created At {report.Date}");
+
+                await context.Channel.SendMessageAsync(reportMessage).ConfigureAwait(false);
+            }
+
+            await context.Message.DeleteAsync().ConfigureAwait(false);
         }
 
         [Command("GetReportsByDate")]
         [Description("Get report from specific date {00 'Month'}")]
         public async Task GetReportsByDate(CommandContext context, string date)
         {
+            var reports = _dbContext.Reports
+            .AsNoTracking()
+            .Where(r => r.UserId == context.Message.Author.Id.ToString() &&
+                r.Date == date);
+
+            foreach (var report in reports)
+            {
+                var reportMessage = new DiscordEmbedBuilder()
+                {
+                    Title = $"Report for {report.MeetingType}"
+                };
+                reportMessage.AddField("Summary", report.Summary);
+                reportMessage.AddField("Timebox", report.Timebox);
+                reportMessage.WithFooter($"Created At {report.Date}");
+
+                await context.Channel.SendMessageAsync(reportMessage).ConfigureAwait(false);
+            }
+
+            await context.Message.DeleteAsync().ConfigureAwait(false);
+        }
+
+        [Command("GoToReports")]
+        [Description("Get links that move to all reports found in channel")]
+        public async Task GoToReports(CommandContext context)
+        {
+            var reportMessage = new DiscordEmbedBuilder()
+            {
+                Title = $"Links to all reports"
+            };
+
+            var channelMessages = await context.Channel.GetMessagesAsync(9999);
+            for (int i = 0; i < channelMessages.Count; i++)
+            {
+                if (channelMessages[i].Embeds != null)
+                {
+                    reportMessage.AddField($"Link {channelMessages[i].Embeds.First().Title}",
+                        channelMessages[i].JumpLink.AbsoluteUri);
+
+                }
+            }
+
+            await context.Channel.SendMessageAsync(reportMessage).ConfigureAwait(false);
+            await context.Message.DeleteAsync().ConfigureAwait(false);
 
         }
     }
