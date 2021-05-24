@@ -1,6 +1,4 @@
-﻿using DataAccessLayer;
-using DataAccessLayer.Models;
-using DiscordBot.Handlers.ReportLogger.Steps;
+﻿using DiscordBot.Handlers.GitHubIssueCreation.Steps;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using System;
@@ -8,21 +6,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Handlers.ReportLogger
+namespace DiscordBot.Handlers.GitHubIssueCreation
 {
-    public class ReportLoggerHandler
+    public class GitHubIssueCreationHandler
     {
         private readonly DiscordClient _client;
         private readonly DiscordChannel _channel;
         private readonly DiscordUser _user;
-        private IReportLoggerStep _currentStep { get; set; }
+        private IGitHubIssueCreationStep _currentStep { get; set; }
         private List<DiscordMessage> messages = new List<DiscordMessage>();
 
-        public ReportLoggerHandler(
+        public GitHubIssueCreationHandler(
             DiscordClient client,
             DiscordChannel channel,
             DiscordUser user,
-            IReportLoggerStep startingStep)
+            IGitHubIssueCreationStep startingStep)
         {
             _client = client;
             _channel = channel;
@@ -42,7 +40,7 @@ namespace DiscordBot.Handlers.ReportLogger
                     await DeleteMessagesAsync().ConfigureAwait(false);
                     var cancelEmbed = new DiscordEmbedBuilder
                     {
-                        Title = "The report has been successfully saved",
+                        Title = "The issue has been successfully saved and posted to github",
                         Color = DiscordColor.PhthaloGreen
                     };
 

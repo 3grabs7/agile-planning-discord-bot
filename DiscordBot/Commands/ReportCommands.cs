@@ -24,6 +24,8 @@ namespace DiscordBot.Commands
             _dbContext = dbContext;
         }
 
+        // Create report with Handler
+        // Steps -> MeetingType, Timebox, Summary
         [Command("ReportInit")]
         public async Task InitializeReportLogger(CommandContext context)
         {
@@ -52,10 +54,13 @@ namespace DiscordBot.Commands
                 );
 
             var succeeded = await reportLogger.ProcessReportLogger().ConfigureAwait(false);
+
             if (!succeeded) return;
 
-            await _dbContext.AddAsync(newReport);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.AddAsync(newReport).ConfigureAwait(false);
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            await context.Channel.SendMessageAsync("Report successfully saved to database").ConfigureAwait(false);
         }
 
         [Command("ReportTemplate")]

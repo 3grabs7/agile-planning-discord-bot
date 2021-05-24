@@ -12,7 +12,7 @@ namespace DataAccessLayer
     {
         public AgilePlanningDiscordBotDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<GitHubIdentity> GitHubIdentitys { get; set; }
+        public DbSet<GitHubInformation> GitHubInformations { get; set; }
         public DbSet<Report> Reports { get; set; }
     }
 }
