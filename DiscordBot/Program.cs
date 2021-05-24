@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 
 namespace DiscordBot
 {
@@ -13,6 +14,7 @@ namespace DiscordBot
             using (IServiceScope scope = host.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<AgilePlanningDiscordBotDbContext>();
+                context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
             }
             host.Run();

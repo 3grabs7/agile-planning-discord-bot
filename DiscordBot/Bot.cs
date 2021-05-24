@@ -53,8 +53,9 @@ namespace DiscordBot
             // Automate this when your not in a bad mood
             Commands.RegisterCommands<Stress>();
             Commands.RegisterCommands<Polls>();
-            Commands.RegisterCommands<ConnectToGitHub>();
             Commands.RegisterCommands<RoleManager>();
+            Commands.RegisterCommands<ReportCommands>();
+            //Commands.RegisterCommands<ConnectToGitHub>();
 
             Client.ConnectAsync();
 

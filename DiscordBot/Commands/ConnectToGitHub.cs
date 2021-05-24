@@ -12,6 +12,7 @@ namespace DiscordBot.Commands
         {
             _context = context;
         }
+
         [Command("Connect")]
         public async Task Connect(CommandContext context, string githubToken)
         {
