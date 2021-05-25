@@ -16,10 +16,10 @@ using System.Threading.Tasks;
 namespace DiscordBot.Commands
 {
     [RequireCategories(CategoryCheckMode.Any, "Reports")]
-    public class ReportCommands : BaseCommandModule
+    public class Reports : BaseCommandModule
     {
         private readonly AgilePlanningDiscordBotDbContext _dbContext;
-        public ReportCommands(AgilePlanningDiscordBotDbContext dbContext)
+        public Reports(AgilePlanningDiscordBotDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -32,6 +32,7 @@ namespace DiscordBot.Commands
             var newReport = new Report()
             {
                 UserId = context.Message.Author.Id.ToString(),
+                GuildId = context.Guild.Id.ToString(),
                 Date = DateTime.Now.ToString("dddd, dd MMMM HH:mm")
             };
 
@@ -181,7 +182,6 @@ namespace DiscordBot.Commands
                 {
                     reportMessage.AddField($"Link {channelMessages[i].Embeds.First().Title}",
                         channelMessages[i].JumpLink.AbsoluteUri);
-
                 }
             }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Handlers.ReportLogger
+namespace DiscordBot.Handlers
 {
     public class Enums
     {

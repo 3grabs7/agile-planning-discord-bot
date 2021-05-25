@@ -55,7 +55,8 @@ namespace DiscordBot
             Commands.RegisterCommands<Stress>();
             Commands.RegisterCommands<Polls>();
             Commands.RegisterCommands<RoleManager>();
-            Commands.RegisterCommands<ReportCommands>();
+            Commands.RegisterCommands<Reports>();
+            Commands.RegisterCommands<Meetings>();
             //Commands.RegisterCommands<ConnectToGitHub>();
 
             Client.ConnectAsync();

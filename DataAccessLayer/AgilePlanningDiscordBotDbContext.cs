@@ -14,5 +14,6 @@ namespace DataAccessLayer
 
         public DbSet<GitHubInformation> GitHubInformations { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Meeting> Meetings { get; set; }
     }
 }

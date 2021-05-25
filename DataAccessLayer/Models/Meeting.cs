@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Models
 {
-    public class Report : Entity
+    public class Meeting : Entity
     {
-        public string UserId { get; set; }
+        public string CreatorUserId { get; set; }
         public string GuildId { get; set; }
+        public string DateTime { get; set; }
+        public string Title { get; set; }
         public string MeetingType { get; set; }
-        public string Summary { get; set; }
         public string Timebox { get; set; }
-        public string Date { get; set; }
-
     }
 }
